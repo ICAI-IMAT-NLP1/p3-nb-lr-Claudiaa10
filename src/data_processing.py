@@ -24,9 +24,13 @@ def read_sentiment_examples(infile: str) -> List[SentimentExample]:
         for line in file:
             line = line.strip()
             parts = line.split("\t")
-            sentence, sentiment = parts
-            tokenized_sentence = tokenize(sentence)  
-            examples.append(SentimentExample(tokenized_sentence, int(sentiment)))  
+            try:
+                sentence, sentiment = parts  
+                tokenized_sentence = tokenize(sentence)  
+                examples.append(SentimentExample(tokenized_sentence, int(sentiment))) 
+            except ValueError:
+                print("error")
+            
     return examples
 
 
@@ -69,7 +73,7 @@ def bag_of_words(
     Returns:
         torch.Tensor: A tensor representing the bag-of-words vector.
     """
-    # TODO: Converts list of words into BoW, take into account the binary vs full
+    # Converts list of words into BoW, take into account the binary vs full
     bow: torch.Tensor = torch.zeros(len(vocab),dtype = torch.float32)
     for word in text:
         if word in vocab: 
@@ -77,7 +81,7 @@ def bag_of_words(
             if binary:
                 bow[key] = 1 
             else:
-                bow[key] += 1 
+                bow[key] += 1
     return bow
 
  

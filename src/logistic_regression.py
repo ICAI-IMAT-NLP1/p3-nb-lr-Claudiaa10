@@ -75,14 +75,13 @@ class LogisticRegression:
         Raises:
             ValueError: If the model weights are not initialized (model not trained).
         """
-        if self._weights is None:
+        if self.weights is None:
             raise ValueError("Model not trained. Call the 'train' method first.")
         features = torch.cat((features, torch.ones(features.shape[0], 1)), dim=1)
         z = torch.matmul(features, self._weights)
         probabilities: torch.Tensor = self.sigmoid(z)
         
         return probabilities
-
     def initialize_parameters(self, dim: int, random_state: int) -> torch.Tensor:
         """
         Initialize the weights for logistic regression using a normal distribution.
@@ -99,9 +98,8 @@ class LogisticRegression:
         """
         torch.manual_seed(random_state)
         params: torch.Tensor = torch.randn(dim + 1, dtype=torch.float32)
-        print(params)
-        print(f"Random state used: {random_state}")
         return params
+
 
     @staticmethod
     def sigmoid(z: torch.Tensor) -> torch.Tensor:
@@ -117,7 +115,7 @@ class LogisticRegression:
         Returns:
             torch.Tensor: The sigmoid of z.
         """
-        result: torch.Tensor = ((1/(1+torch.exp(-z))))
+        result: torch.Tensor = 1 / (1 + torch.exp(-z))
         return result
 
     @staticmethod
@@ -137,6 +135,7 @@ class LogisticRegression:
         Returns:
             torch.Tensor: The computed binary cross-entropy loss.
         """
+
         ce_loss: torch.Tensor = -torch.mean(targets * torch.log(predictions) + (1 - targets) * torch.log(1 - predictions))
         return ce_loss
 
